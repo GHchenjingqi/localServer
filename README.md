@@ -18,14 +18,25 @@ npm install
 
 2.修改配置 config.js
 
+- target 后端接口地址
+- apistart API拦截开头字符
+- pathRewite 规则重写对象
+- localMode 是否开启本地模式，默认false不开启，ture开启后不走代理，响应数据从json目录返回；
+- grapJson 是否抓取接口数据，用于给本地模式抓取数据
+
+注意：grapJson仅代理模式生效，grapJson为true时，localMode必须为false!!!
+
 ```js
 module.exports ={
-    target: 'http://127.0.0.1:6080', // 接口地址
+    target: 'http://127.0.0.1:6080', // 接口域名
     apistart: '/api', // api前缀
-    // 重写规则
+    // 需要rewrite的接口
     pathRewrite: {
         '^/api': ''
-    }
+    },
+    // localMode 和 grabJson 二选一，不可同时开启
+    localMode: false, // 是否开启本地模式，默认关闭 false - 开启之后 接口响应内容从json目录读取
+    grabJson: false, // 是否抓取json数据，默认关闭 false - 开启之后 抓取接口数据保存在json目录下
 }
 ```
 
