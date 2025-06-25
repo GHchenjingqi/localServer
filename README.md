@@ -35,6 +35,8 @@ module.exports ={
 npm run dev
 ```
 
+4.将打包后的文件复制到web目录！
+
 ### 插件声明
 
 1. "compression": "^1.8.0" - API请求压缩
