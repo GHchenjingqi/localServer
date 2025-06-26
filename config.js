@@ -1,7 +1,8 @@
 module.exports ={
-    target: 'http://127.0.0.1:6080', // 接口域名
+    webPort: 13000,
+    target: 'http://192.168.11.50:8190', // 接口域名
     apistart: '/api', // api前缀
-    // 需要rewrite的接口
+    // 代理需要rewrite的规则
     pathRewrite: {
         '^/api': ''
     },

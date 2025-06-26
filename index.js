@@ -27,7 +27,7 @@ if (config.grabJson) {
     compress: true,
     on: {
       proxyReq: (proxyReq, req, res) => {
-        console.log('请求拦截器执行');
+        console.log('请求拦截器执行',req.originalUrl);
         const interfaceName = req.originalUrl.split('?')[0].replace(/^\//, '').replace(/\//g, '_') || 'root';
         req._interfaceName = interfaceName;
       },
@@ -58,7 +58,6 @@ if (config.grabJson) {
     // json 模式
     const LOG_DIR = path.join(__dirname, 'json');
     const readFileAsync = promisify(fs.readFile);
-    
     app.use(config.apistart, async (req, res, next) => {
       try {
         // 生成接口对应的文件名
@@ -98,7 +97,7 @@ if (config.grabJson) {
     // 配置 API 代理（放在通配符路由之前）
     app.use(config.apistart, createProxyMiddleware({
       target: config.target,
-      changeOrigin: true,
+      changeOrigin: false,
       pathRewrite: config.pathRewrite,
       secure: false,
       pool: {
@@ -106,6 +105,11 @@ if (config.grabJson) {
         maxFreeSockets: 10,   // 空闲连接数上限
         timeout: 30000,       // 连接超时时间（毫秒）
         keepAliveMsecs: 30000 // 保持连接活跃时间
+      },
+      on: {
+        proxyReq: (proxyReq, req, res) => {
+          console.log(`${proxyReq.protocol}//${proxyReq.host}:${proxyReq.port}${proxyReq.path}`);
+        }
       },
       compress: true
     }));
@@ -128,7 +132,7 @@ app.get(/.*/, (req, res) => {
 });
 
 // 使用环境变量或默认端口
-const PORT = process.env.PORT || 3000;
+const PORT = config.webPort || 3000;
 app.listen(PORT, () => {
   console.log(`服务运行在 http://127.0.0.1:${PORT}`);
 });
